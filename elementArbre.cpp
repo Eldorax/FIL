@@ -2,6 +2,7 @@
 
 ElementArbre::ElementArbre()
 {
+	etat = 0;
 	symbole = 0;
 	mot = 0;
 	elementArbreGauche = NULL;

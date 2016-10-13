@@ -1,61 +1,73 @@
 #include "arbre.h"
-
+/*
 void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsigned int token)
-	{		
-		//printf("lettre : %c\n", str[i]);
+	{	
 		
-		
-		//cout << "lettre : " << str[i] << endl;
 		if( current->getSymbole() == 0 )
 		{
-			//printf("lettre : %c\n", str[i]);
 			//cout << "pas de caractere" << endl;
+			if( i < str.size() )
+			{
 			current->setSymbole(str[i]);
 			current->setElDroite(new ElementArbre);
-			//current = current->getElDroite();
-			addMot(str, i, current, token);		
-		}
-		else if( (current->getSymbole() == str[i]) && (current->getElDroite() == NULL) )
-		{	
-			cout << "match et pas de chemin a droite" << endl;
-			current->setElDroite(new ElementArbre);
-			current = current->getElDroite();
-			addMot(str, i+1, current, token);
-		}
-		else if( (current->getSymbole() == str[i]) && (current->getElDroite() != NULL) )
-		{
-			//cout << "match et chemin a droite" << endl;
-			current->setElDroite(new ElementArbre);
-			//current = current->getElDroite();
-			addMot(str, i+1, current, token);
-	
-		}
-	
-		// no match, il existe un el à gauche -> on relance sur el de gauche
-		else if( (current->getSymbole() != str[i]) && (current->getElGauche() != NULL) )
-		{	
-			cout << "not match et chemin a gauche" << endl;	
-			current = current->getElGauche();
-			addMot(str, i, current, token);
-		}
-
-		else if( (current->getSymbole() != str[i]) && (current->getElGauche() == NULL) )
-		{	
-			cout << "not match et pas de chemin a gauche" << endl;
 			current->setElGauche(new ElementArbre);
-			current = current->getElGauche();
-			addMot(str, i, current, token);
+			addMot(str, i+1, current->getElDroite(), token);
+			}
+
+			if( (i == str.size()) - 1 )
+			{	
+				//current->setSymbole(str[i]);
+				//current->setElDroite(new ElementArbre);
+				//current->setElGauche(new ElementArbre);
+				current->setMot(token);
+				return;
+			}	
 		}
-
-
-		// no match, il existe pas d'el à gauche ->
-		
-		
-		if( (i == str.size() - 1) )
-		{			
-			//cout << "derniere lettre" << endl;
-			current->setMot(token);
-			return;
+		else if( current->getSymbole() == str[i] )
+		{	
+			//cout << "match et pas de chemin a droite" << endl;
+			addMot(str, i+1, current->getElDroite(), token);
+		}
+		else if( current->getSymbole() != str[i] )
+		{	
+			//cout << "not match et pas de chemin a gauche" << endl;
+			addMot(str, i, current->getElGauche(), token);
+		}
+	}
+*/
+void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsigned int token)
+	{	
+		//cout << "---------------------------------------" << endl << "valeur : " << str[i];	
+		//printf("%c\n", str[i]);
+		while(true)
+		{
+			if(current->getEtat() == 0)
+			{
+				//cout << "attribution" << endl;
+				current->setEtat(1);
+				current->setSymbole(str[i]);
+				if(i >= str.size() - 1)
+				{
+					current->setMot(token);				
+					break;
+				}
+			}else
+			if(current->getSymbole() == str[i])
+			{
+				//cout << "match" << endl;
+				i++;
+				if (current->getElDroite() == NULL)
+					current->setElDroite(new ElementArbre);
+				current = current->getElDroite();
+			}else
+			if(current->getSymbole() != str[i])
+			{
+				//cout << "not match" << endl;
+				if (current->getElGauche() == NULL)
+					current->setElGauche(new ElementArbre);
+				current = current->getElGauche();
+			}
+			//cout << " i : " << i << "  |  max : " << str.size() << endl;
 		}
 	}
 
@@ -81,7 +93,7 @@ void Arbre::addLexique(string lex_line)
 	
 	//Convertion en tableau d'utf-8
 	vector<unsigned int> word_utf8 = getUTF8(word);
-	
+	//cout << "avant recu " << word_utf8.size() << endl;
 	addMot(word_utf8, 0, &start, word_token);
 }
 
@@ -108,53 +120,32 @@ Arbre::Arbre(string p_fichier)
 }
 
 
-/*
+
 void Arbre::showRecur(ElementArbre* current)
 {
 
-	printf("%d ",current->getSymbole());
+	printf(" %d ",current->getSymbole());
 	if(current->isWord())
 	{
-		cout << current->getMot();
-		cout << endl;
-		//cout << blanck;
+		cout << '|' << current->getMot();
+		//cout << endl;
 	}
 	if(current->getElDroite() != NULL)
 	{
-		//blanck += " ";
 		showRecur(current->getElDroite());
 	}
 	if(current->getElGauche() != NULL)
 	{
-		//blanck += " ";
+		cout << endl;
 		showRecur(current->getElGauche());
-	}
-
-	//blanck.resize(blanck.size()-1);
-	return;
-}*/
-
-void Arbre::showRecur(ElementArbre* current)
-{
-
-	printf("%d ",current->getSymbole());
-	if(current->isWord())
-	{
-		cout << "|";
-		cout << current->getMot();
-		cout << " ";
-	}
-	if(current->getElDroite() != NULL)
-	{
-		showRecur(current->getElDroite());
 	}
 	return;
 }
 
+
 void Arbre::show()
 {
-	cout << "premier : " << start.getSymbole() << endl;
-	showRecur(&start);	
+	showRecur(&start);
 }
 
 
