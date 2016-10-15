@@ -1,49 +1,11 @@
 #include "arbre.h"
-/*
-void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsigned int token)
-	{	
-		
-		if( current->getSymbole() == 0 )
-		{
-			//cout << "pas de caractere" << endl;
-			if( i < str.size() )
-			{
-			current->setSymbole(str[i]);
-			current->setElDroite(new ElementArbre);
-			current->setElGauche(new ElementArbre);
-			addMot(str, i+1, current->getElDroite(), token);
-			}
 
-			if( (i == str.size()) - 1 )
-			{	
-				//current->setSymbole(str[i]);
-				//current->setElDroite(new ElementArbre);
-				//current->setElGauche(new ElementArbre);
-				current->setMot(token);
-				return;
-			}	
-		}
-		else if( current->getSymbole() == str[i] )
-		{	
-			//cout << "match et pas de chemin a droite" << endl;
-			addMot(str, i+1, current->getElDroite(), token);
-		}
-		else if( current->getSymbole() != str[i] )
-		{	
-			//cout << "not match et pas de chemin a gauche" << endl;
-			addMot(str, i, current->getElGauche(), token);
-		}
-	}
-*/
 void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsigned int token)
 	{	
-		//cout << "---------------------------------------" << endl << "valeur : " << str[i];	
-		//printf("%c\n", str[i]);
 		while(true)
 		{
 			if(current->getEtat() == 0)
 			{
-				//cout << "attribution" << endl;
 				current->setEtat(1);
 				current->setSymbole(str[i]);
 				if(i >= str.size() - 1)
@@ -54,7 +16,6 @@ void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsig
 			}else
 			if(current->getSymbole() == str[i])
 			{
-				//cout << "match" << endl;
 				i++;
 				if (current->getElDroite() == NULL)
 					current->setElDroite(new ElementArbre);
@@ -62,12 +23,10 @@ void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsig
 			}else
 			if(current->getSymbole() != str[i])
 			{
-				//cout << "not match" << endl;
 				if (current->getElGauche() == NULL)
 					current->setElGauche(new ElementArbre);
 				current = current->getElGauche();
 			}
-			//cout << " i : " << i << "  |  max : " << str.size() << endl;
 		}
 	}
 
@@ -93,14 +52,13 @@ void Arbre::addLexique(string lex_line)
 	
 	//Convertion en tableau d'utf-8
 	vector<unsigned int> word_utf8 = getUTF8(word);
-	//cout << "avant recu " << word_utf8.size() << endl;
+	//ajout du mot dans l'arbre
 	addMot(word_utf8, 0, &start, word_token);
 }
 
 Arbre::Arbre(string p_fichier)
 {
 	ifstream fichier(p_fichier.c_str(), ios::in);
-	//start.setSymbole(97); //'a'
 
 	if ( !fichier )
 		cout << "Erreur de lecture du fichier " << p_fichier << endl;
@@ -117,36 +75,184 @@ Arbre::Arbre(string p_fichier)
 	}
 
 	fichier.close();
+	
 }
 
-
-
-void Arbre::showRecur(ElementArbre* current)
+void Arbre::printVector(vector <unsigned int> vec)
 {
+	for (int i = 0; i < vec.size(); i++)
+		printf("%c", vec[i]);
+}
 
-	printf(" %d ",current->getSymbole());
-	if(current->isWord())
+void Arbre::showRecur(ElementArbre* current, vector <unsigned int> mot)
+{
+	mot.push_back(current->getSymbole());
+	if(current->getMot() != 0)
 	{
-		cout << '|' << current->getMot();
-		//cout << endl;
+		printVector(mot);
+		cout << " : " << current->getMot() << endl;
 	}
+
 	if(current->getElDroite() != NULL)
-	{
-		showRecur(current->getElDroite());
-	}
+		showRecur(current->getElDroite(), mot);
+
 	if(current->getElGauche() != NULL)
 	{
-		cout << endl;
-		showRecur(current->getElGauche());
+		mot.pop_back();
+		showRecur(current->getElGauche(), mot);
 	}
+	
 	return;
 }
 
-
 void Arbre::show()
 {
-	showRecur(&start);
+	vector <unsigned int> temp(0);
+	showRecur(&start, temp);
 }
+
+
+ElementArbre* Arbre::rechercheChar(ElementArbre* current, unsigned int &current_char, bool flag)
+{
+	//cout << "-------->" << current->getSymbole() << endl;
+	ElementArbre* tempCurrent = current;
+	if (!flag)
+		tempCurrent = tempCurrent->getElDroite();
+	if(tempCurrent == NULL)
+		return current;
+
+	while(true)
+	{
+		//cout << tempCurrent->getSymbole() << endl;
+		if(tempCurrent->getSymbole() == current_char)
+		{
+			//cout << "--------------------->" << tempCurrent->getSymbole() << endl;
+			current = tempCurrent;
+			return current;
+		}
+		else if (tempCurrent->getElGauche() != NULL)
+		{
+			tempCurrent = tempCurrent->getElGauche();
+		}
+		else
+		{
+			return current;
+		}
+	}
+}
+
+
+/*
+ElementArbre* Arbre::rechercheChar(ElementArbre* pt_current, unsigned int &current_char, bool flag)
+{
+	while(true)
+	{
+		if((*pt_current)->getSymbole() == current_char)
+		{
+			cout << "----->" << (*pt_current)->getSymbole() << endl;
+			return true;
+		}
+		else if ((*pt_current)->getElGauche() != NULL)
+		{
+			(*pt_current) = (*pt_current)->getElGauche();
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+*/
+
+bool Arbre::in(vector <unsigned int> vecteur, unsigned int elem)
+{
+	for(int i = 0; i < vecteur.size(); i++)
+		if(vecteur[i] == elem)
+			return true;
+	return false;
+}
+
+void Arbre::tokenization(string file, vector <unsigned int> sep)
+{
+	ElementArbre* current = &start;
+	unsigned int current_char;
+	bool flag = true; //vrai si current est element de la racine de l'arbre
+	string str;
+	char buffer;
+	int nb_octet;
+	ifstream fichier(file.c_str(), ios::in);
+	if(!fichier)
+		cout << "erreur lors de l'ouverture du fichier" << file << endl;
+	while( !fichier.eof() )
+	{
+		str.clear();
+		fichier.get(buffer);
+		nb_octet = octetUsed ((unsigned char) buffer); //taille du caractere utf8
+		str += buffer;
+		for(int i = 0; i < nb_octet - 1; i++)
+		{
+			fichier.get(buffer);
+			str += buffer;
+		}
+		current_char = getUnsignedInt(str, 0, nb_octet);
+		//cout << current_char << endl;
+		current = rechercheChar(current, current_char, flag);
+		flag = false;
+		if(current->getSymbole() != current_char)
+		{			
+			if(in(sep,current_char) && current->isWord())
+				cout << current->getMot() << endl;
+				//cout << "";
+			
+			else
+			{
+				cout << 0 << endl;
+				while(!in(sep, current_char) && !fichier.eof())
+				{
+					str.clear();
+					fichier.get(buffer);
+					nb_octet = octetUsed ((unsigned char) buffer); //taille du caractere utf8
+					str += buffer;
+					for(int i = 0; i < nb_octet - 1; i++)
+					{
+						fichier.get(buffer);
+						str += buffer;
+					}
+					current_char = getUnsignedInt(str, 0, nb_octet);
+				}
+			}
+			current = &start;
+			flag = true;
+		}
+		//cout << "->" << current->getSymbole() << endl;
+		
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

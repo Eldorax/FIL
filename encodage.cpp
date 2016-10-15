@@ -47,27 +47,34 @@ unsigned int getUnsignedInt(string str, int i, int j)
 	return res;
 }
 
+int octetUsed (unsigned char temp)
+{
+	char nb_octet = 0;
+	if( temp & 128 )
+	{
+		while( temp & 128 ) 
+		{
+			nb_octet++;
+			temp = temp << 1;
+		}
+	}
+	else
+		nb_octet = 1;
+	return nb_octet;
+}
+
 vector<unsigned int> getUTF8(string str)
 {
 	vector<unsigned int> res(0);
 	unsigned int i = 0;
-	char nb_octet = 0;	
+	char nb_octet;	
 	unsigned char temp;
 	unsigned int to_add;
 	while( i < str.size() )
 	{	
 		temp = str[i];
-
-		if( temp & 128 )
-		{
-			while( temp & 128 ) 
-			{
-				nb_octet++;
-				temp = temp << 1;
-			}
-		}
-		else
-			nb_octet = 1;
+		nb_octet = octetUsed(temp);
+		
 
 		to_add = 0;
 		to_add = getUnsignedInt(str, i, i + nb_octet);
