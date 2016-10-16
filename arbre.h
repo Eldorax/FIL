@@ -24,11 +24,12 @@ class Arbre
 		void printVector(vector<unsigned int>);
 		ElementArbre* rechercheChar(ElementArbre* , unsigned int &, bool);
 		bool in(vector <unsigned int>, unsigned int);
+		void getUtf8FromFile(ifstream& , unsigned int* );
 
 	public:
 		Arbre(string);
 		void show();
-		void tokenization(string, vector <unsigned int>);
+		vector<unsigned int> tokenization(string, vector <unsigned int>);
 };
 
 
