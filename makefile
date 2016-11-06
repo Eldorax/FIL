@@ -1,8 +1,8 @@
-tokenize.exe: elementArbre.o main.o arbre.o encodage.o codetomot.exe
-	g++ -Wall elementArbre.o arbre.o encodage.o main.o -o tokenize.exe
+tokenize.exe: elementArbre.o main.o arbre.o encodage.o modele.o
+	g++ -Wall elementArbre.o arbre.o encodage.o modele.o main.o -o tokenize.exe
 	#./tokenize.exe lexique.txt train.fr
 
-main.o: main.cpp elementArbre.h arbre.h encodage.h
+main.o: main.cpp elementArbre.h arbre.h encodage.h modele.h
 	g++ -Wall -c main.cpp -o main.o
 
 Arbre: arbre.cpp arbre.h elementArbre.h encodage.h
@@ -13,6 +13,9 @@ elementArbre.o: elementArbre.cpp elementArbre.h
 
 encodage.o: encodage.cpp encodage.h
 	g++ -Wall -c encodage.cpp -o encodage.o
+
+modele.o: modele.h modele.cpp
+	g++ -std=c++11 -Wall -c modele.cpp -o modele.o
 
 codetomot.exe: codetomot.c
 	gcc -Wall -o codetomot.exe codetomot.c
