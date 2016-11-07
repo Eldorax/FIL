@@ -17,10 +17,13 @@ class Modele
 
 	public:
 		Modele(vector<unsigned int>);
+		Modele(){};
+		
+		void setList_token(vector<unsigned int>);
 
 		void ShowListToken(void);      //Affichage de la liste de Tokens.
 		void ShowNGram(string);        //Affiche le(s) NGram. "stdout" pour affichage sur le terminal
-									   //                      "filename" pour dans un fichier	
+									          //                      "filename" pour dans un fichier	
 
 		void NGramConstructor(char);   //Construction des NGrams.
 };

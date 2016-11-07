@@ -70,6 +70,11 @@ void Modele::ShowNGram(string type)
 	}
 }
 
+void Modele::setList_token(vector<unsigned int> p_list_token)
+{
+	list_token = p_list_token;
+}
+
 
 
 
