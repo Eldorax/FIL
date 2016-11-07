@@ -37,7 +37,7 @@ ArgFlag TraitementArgs(int len, char ** p_argv, int curr)
 			case 'c':
 				if( p_argv[curr][2] == 'g')
 				{
-					getArgParm(len, p_argv, curr, &res.data); // pas besion de tester car default = 1
+					getArgParm(len, p_argv, curr, &res.data); // pas besion de tester car default = 1.
 					res.flag = 2;
 				}
 				break;

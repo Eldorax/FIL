@@ -7,7 +7,8 @@
 using namespace std;
 
 
-typedef struct {
+typedef struct
+{
 	int flag;
 	string data;
 }ArgFlag;

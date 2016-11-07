@@ -117,11 +117,15 @@ int main(int argc, char ** argv)
 	Modele modele(token_list);
 	
 	
-	modele.ShowListToken();
+	//modele.ShowListToken();
 
-	//modele.NGramConstructor(2); 
+	modele.NGramConstructor(2); 
 
 	//modele.ShowNGram("stdout");
+
+	modele.probasConstructor(2);
+
+	//modele.ShowProbas();
 
 	return 0;
 }
