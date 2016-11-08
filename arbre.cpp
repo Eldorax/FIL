@@ -2,6 +2,7 @@
 
 void Arbre::addMot(vector<unsigned int> str, int i, ElementArbre* current, unsigned int token)
 	{	
+		moi = this;
 		while(true)
 		{
 			if(current->getEtat() == 0)
@@ -251,6 +252,84 @@ vector<unsigned int> Arbre::tokenization(string file, vector <unsigned int> sep)
 	return token_list;
 }
 
+
+vector<unsigned int> Arbre::tokenization(string str, vector <unsigned int> sep)
+{
+	ElementArbre* current = &start;
+	ElementArbre* last_word = NULL;
+
+	vector<unsigned int> token_list(0);
+
+	unsigned int* res = new unsigned int [2];
+	unsigned int current_char;
+	int nb_octet;
+	int i = 0;
+
+	bool flag = true; //vrai si current est element de la racine de l'arbre
+	int go_back;      //sert à se balader dans le fichier pour aller à la fin du dernier mot valide.
+
+	while( i < str.size() )
+	{
+		getUtf8FromFile(fichier, res);
+		current_char = res[0];
+		nb_octet = res[1];
+		
+		if((current_char == 32 && flag) || (current_char == 10 && flag)) //on saute les espace et les \n en debut de recherche de mot
+			continue;
+
+		if(current_char == 32)  //modification des " " en "_" pendant la recherche d'un mot.
+			current_char = 95;
+
+		go_back -= nb_octet;
+
+		current = rechercheChar(current, current_char, flag); //recherche du charactère dans l'arbre.
+
+		if(flag)
+			flag = false;
+
+		if(current == NULL) //Si le charactère n'a pas été trouvé.
+		{
+			if(last_word == NULL) //si aucun mot valide n'a pas encore été trouvé.
+			{
+				while(!in(sep, current_char) && !fichier.eof()) //Avance jusqu'au prochaien separateur.
+				{
+					getUtf8FromFile(fichier, res);
+					current_char = res[0];
+					nb_octet = res[1];
+				}
+				fichier.seekg(-nb_octet, ios::cur);
+				token_list.push_back(0);
+			}
+			else
+			{
+				token_list.push_back( last_word->getMot() );
+				fichier.seekg(go_back, ios::cur);
+			}
+			last_word = NULL;
+			current = &start;
+			flag = true;
+			go_back = 0;
+		}
+
+		else if (current->getMot() != 0) //si on trouve le charactère et que c'est la fin d'un mot
+		{                                //on vérifi si il se termine par un separateur ou que c'est une " ' ".  
+			getUtf8FromFile(fichier, res);
+			current_char = res[0];
+			nb_octet = res[1];
+
+			if(in(sep,current_char) || current->getSymbole() == 39)
+			{
+				last_word = current;
+				go_back = 0;
+			}
+			
+			fichier.seekg(-nb_octet, ios::cur);
+		}
+		
+	}
+	
+	return token_list;
+}
 
 
 

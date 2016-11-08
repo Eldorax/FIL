@@ -77,7 +77,7 @@ void Modele::setList_token(vector<unsigned int> p_list_token)
 }
 
 void Modele::probasConstructor(char taille)
-{/*
+{
 	if( taille <= taille_gram )
 	{
 		vector<unsigned int> key;
@@ -89,56 +89,99 @@ void Modele::probasConstructor(char taille)
 				key = it->first;
 				if(n == 0)
 				{
-					//cout << "Division : " << ( (double) n_grams[n][key] ) / ( (double) list_token.size() ) << endl;
-					probas[key] = -1 * log10 ( ( (double) n_grams[n][key] ) / ( (double) list_token.size() ) );
+					probas[key] = calcProba( ( (double) n_grams[n][key] ), ( (double) list_token.size() ), "laplace");
 				}
 				else
 				{
 					temp = key;
 					temp.pop_back();
-					probas[key] = -1 * log10 ( ( (double) (n_grams[n][key])) / ( (double) (n_grams[n - 1][temp]) ) );
+					probas[key] = calcProba( ( (double) (n_grams[n][key]) ), ( (double) (n_grams[n - 1][temp]) ), "laplace" );
 				}
 			}
 			key.clear();
 		}
 	}
 	else
-		cout << "Erreur lors de l'utilisation du modèle.\n";*/
-	vector<vector<unsigned int>> ensemblef;
-	vector<vector<unsigned int>> temp;
-	vector<unsigned int> ensembled;
-	for(map<vector<unsigned int>, unsigned int>::iterator it = n_grams[0].begin(); it != n_grams[0].end(); it++)
+		cout << "Erreur lors de l'utilisation du modèle.\n";
+	
+}
+
+
+double Modele::calcProba(double num, double denum, string type)
+{
+	double a = 0.1;
+	double res;
+
+	if( type == "laplace" )
 	{
-		ensembled.push_back(it->first[0]);
+		res = -1 * log10( (num + a) / ( denum + (list_token.size()*a) ) );
 	}
-	for(map<vector<unsigned int>, unsigned int>::iterator it = n_grams[0].begin(); it != n_grams[0].end(); it++)
+	else
 	{
-		ensemblef.push_back(it->first);
+		cout << "Type de lissage inconnu.\n";
+		exit(1);		
 	}
-	int gg = 0;
-	for(int i = 1; i < taille; i++)
+	return res;	
+}
+
+double Modele::calcPerplex(string str, Arbre* arbre, vector<unsigned int> sep)
+{
+	vector<unsigned int> res;
+	res = arbre->tokenization(str, sep);
+	return calcPerplex(res);
+}
+
+double Modele::calcPerplex(vector<unsigned int> tokens)
+{
+	//Plog
+	double plog = 0;
+	vector<unsigned int> clef_buffer;	
+	vector<unsigned int > temp;
+
+	//probabilitée particulieres.
+	unsigned int i;
+	for( i = 0; i < (unsigned char) taille_gram; i++)
 	{
-		//Produit cartésien de mon ensemble finale avec l'ensemble de depart
-		temp = ensemblef;
-		ensemblef.clear();
-		for(unsigned int j = 0; j < temp.size(); j++)
+		clef_buffer.push_back(tokens[i]);
+		if( probas.find(clef_buffer) != probas.end() ) //si la proba != 0
 		{
-			//cout << j << endl;
-			for(unsigned int k = 0; k < ensembled.size(); k++)
-			{
-				temp[j].push_back(ensembled[k]);
-				//ensemblef.push_back(temp[j]);
-				temp[j].pop_back();/*
-				if((k==0) && (j%1000 == 0))
-					cout << ShowVector(ensemblef[gg]) << endl;
-				gg++;*/
-			}
+			plog += probas[clef_buffer];
 		}
-	}/*
-	for(unsigned int i = 0; i < ensemblef.size(); i++)
+		else
+		{
+			temp = clef_buffer;
+			temp.pop_back();
+			if( probas.find(temp) != probas.end() ) //test de la proba du denum.
+				plog += calcProba(0, probas[temp], "laplace");
+			else
+				plog += calcProba(0, 0, "laplace");
+		}
+	}
+	
+	//N_gram "normal"
+	for( i = i; i < tokens.size(); i++)
 	{
-		cout << ShowVector(ensemblef[i]) << endl;
-	}*/
+		cout << "plog : " << plog << endl;
+		//Ajoute du nouveau mot.
+		clef_buffer.push_back(tokens[i]);
+		//suppresion de l'ancien mot.
+		clef_buffer.assign( clef_buffer.begin() + 1, clef_buffer.end() );
+
+		if( probas.find(clef_buffer) != probas.end() ) //si la proba != 0
+		{
+			plog += probas[clef_buffer];
+		}
+		else
+		{
+			temp = clef_buffer;
+			temp.pop_back();
+			if( probas.find(temp) != probas.end() ) //test de la proba du denum.
+				plog += calcProba(0, probas[temp], "laplace");
+			else
+				plog += calcProba(0, 0, "laplace");
+		}
+	}
+	return pow(2, plog/tokens.size());
 }
 
 void Modele::ShowProbas(void)
@@ -146,6 +189,8 @@ void Modele::ShowProbas(void)
 	for (map<vector<unsigned int>, double>::iterator it = probas.begin(); it != probas.end(); it++)
 		cout << ShowVector(it->first) << " " << (double) it->second << '\n';
 }
+
+
 
 /*
 void pipi(list_token, n,)
@@ -170,7 +215,48 @@ void pipi(list_token, n,)
 	
 }
 
+vector<vector<unsigned int>> ensemblef;
+	vector<vector<unsigned int>> temp;
+	vector<unsigned int> ensembled;
+	for(map<vector<unsigned int>, unsigned int>::iterator it = n_grams[0].begin(); it != n_grams[0].end(); it++)
+	{
+		ensembled.push_back(it->first[0]);
+	}
+	for(map<vector<unsigned int>, unsigned int>::iterator it = n_grams[0].begin(); it != n_grams[0].end(); it++)
+	{
+		ensemblef.push_back(it->first);
+	}
+	int gg = 0;
+	for(int i = 1; i < taille; i++)
+	{
+		//Produit cartésien de mon ensemble finale avec l'ensemble de depart
+		temp = ensemblef;
+		ensemblef.clear();
+		for(unsigned int j = 0; j < temp.size(); j++)
+		{
+			//cout << j << endl;
+			for(unsigned int k = 0; k < ensembled.size(); k++)
+			{
+				temp[j].push_back(ensembled[k]);
+				//ensemblef.push_back(temp[j]);
+				temp[j].pop_back();
+				if((k==0) && (j%1000 == 0))
+					cout << ShowVector(ensemblef[gg]) << endl;
+				gg++;
+			}
+		}
+	}
+	for(unsigned int i = 0; i < ensemblef.size(); i++)
+	{
+		cout << ShowVector(ensemblef[i]) << endl;
+	}
+}
 */
+
+
+
+
+
 
 
 

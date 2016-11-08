@@ -121,11 +121,18 @@ int main(int argc, char ** argv)
 
 	modele.NGramConstructor(2); 
 
-	//modele.ShowNGram("stdout");
+	modele.ShowNGram("out");
 
 	modele.probasConstructor(2);
 
 	//modele.ShowProbas();
+	unsigned int list_sep1[12] = {9297, 9297};
+	vector <unsigned int> sep1(0);
+	sep1.assign(list_sep1, list_sep1 + 2);	
+	cout << "ici : " << modele.calcPerplex(sep1) << endl;
+
+	string sample("dit une phrase");
+	cout << sample << modele.calcPerplex(sample, &arbre, sep) << endl;
 
 	return 0;
 }
