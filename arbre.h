@@ -25,11 +25,13 @@ class Arbre
 		ElementArbre* rechercheChar(ElementArbre* , unsigned int &, bool);
 		bool in(vector <unsigned int>, unsigned int);
 		void getUtf8FromFile(ifstream& , unsigned int* );
+		void getUtf8FromString(string , unsigned int*, int );
 
 	public:
 		Arbre(string);
 		void show();
 		vector<unsigned int> tokenization(string, vector <unsigned int>);
+		vector<unsigned int> tokenizationStr(string, vector <unsigned int>);
 };
 
 

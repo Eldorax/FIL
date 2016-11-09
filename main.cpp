@@ -126,13 +126,13 @@ int main(int argc, char ** argv)
 	modele.probasConstructor(2);
 
 	//modele.ShowProbas();
-	unsigned int list_sep1[12] = {9297, 9297};
+	unsigned int list_sep1[1] = {9297};
 	vector <unsigned int> sep1(0);
-	sep1.assign(list_sep1, list_sep1 + 2);	
-	cout << "ici : " << modele.calcPerplex(sep1) << endl;
+	sep1.assign(list_sep1, list_sep1 + 1);	
+	cout << "Probas de vous : " << modele.calcPerplex(sep1) << endl;
 
-	string sample("dit une phrase");
-	cout << sample << modele.calcPerplex(sample, &arbre, sep) << endl;
-
+	string sample("vous vous");
+	cout << sample << " " << modele.calcPerplex(sample, &arbre, sep) << endl;
+	//9297  1.60239
 	return 0;
 }

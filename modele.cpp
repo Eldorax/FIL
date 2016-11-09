@@ -124,10 +124,10 @@ double Modele::calcProba(double num, double denum, string type)
 	return res;	
 }
 
-double Modele::calcPerplex(string str, Arbre* arbre, vector<unsigned int> sep)
+double Modele::calcPerplex(string phrase, Arbre* arbre, vector<unsigned int> sep)
 {
 	vector<unsigned int> res;
-	res = arbre->tokenization(str, sep);
+	res = arbre->tokenizationStr(phrase, sep);
 	return calcPerplex(res);
 }
 
@@ -140,7 +140,7 @@ double Modele::calcPerplex(vector<unsigned int> tokens)
 
 	//probabilitée particulieres.
 	unsigned int i;
-	for( i = 0; i < (unsigned char) taille_gram; i++)
+	for( i = 0; i < (unsigned char) taille_gram && i < tokens.size(); i++)
 	{
 		clef_buffer.push_back(tokens[i]);
 		if( probas.find(clef_buffer) != probas.end() ) //si la proba != 0
@@ -161,7 +161,6 @@ double Modele::calcPerplex(vector<unsigned int> tokens)
 	//N_gram "normal"
 	for( i = i; i < tokens.size(); i++)
 	{
-		cout << "plog : " << plog << endl;
 		//Ajoute du nouveau mot.
 		clef_buffer.push_back(tokens[i]);
 		//suppresion de l'ancien mot.
