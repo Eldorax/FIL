@@ -8,7 +8,9 @@
 #include <fstream>
 #include <math.h>
 #include <stdlib.h>
+#include <fstream>
 #include "arbre.h"
+#include "showVector.h"
 
 using namespace std;
 
@@ -23,6 +25,9 @@ class Modele
 	public:
 		Modele(vector<unsigned int>);
 		Modele(){};
+
+		char getTaille_gram(void){return taille_gram;};
+		map<vector<unsigned int>, double> getProbas(void){return probas;};
 		
 		void setList_token(vector<unsigned int>);
 
@@ -33,8 +38,6 @@ class Modele
 
 		void NGramConstructor(char);   //Construction des NGrams.
 		void probasConstructor(char);  //Construction du language.
-		double calcPerplex(vector<unsigned int>);    //Calcule la perpexité de la phrase donnée en paramètre.
-		double calcPerplex(string, Arbre*, vector<unsigned int>); //Calcule la perplexité de la str donner en paramètre.
 		double calcProba(double, double, string); //Calcule la probabilité (logprob) à partir
 												  // nb d'occurence n_gram et nb d'occurence de n-1_gram et le type de lissage.
 };

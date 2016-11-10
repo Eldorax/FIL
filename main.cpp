@@ -8,6 +8,7 @@
 #include <vector>
 #include <stdlib.h>
 #include "arg.h"
+#include "translation.h"
 
 using namespace std;
 
@@ -124,15 +125,21 @@ int main(int argc, char ** argv)
 	modele.ShowNGram("out");
 
 	modele.probasConstructor(2);
+	
+	Translation translation = Translation();
+
+	translation.calcPerplexFromFile("exemple_pplex.txt", &arbre, sep, modele);
+
+	translation.showPerplex();
 
 	//modele.ShowProbas();
-	unsigned int list_sep1[1] = {9297};
-	vector <unsigned int> sep1(0);
-	sep1.assign(list_sep1, list_sep1 + 1);	
-	cout << "Probas de vous : " << modele.calcPerplex(sep1) << endl;
+	//unsigned int list_sep1[1] = {9297};
+	//vector <unsigned int> sep1(0);
+	//sep1.assign(list_sep1, list_sep1 + 1);	
+	//cout << "Probas de vous : " << modele.calcPerplex(sep1) << endl;
 
-	string sample("vous vous");
-	cout << sample << " " << modele.calcPerplex(sample, &arbre, sep) << endl;
+	//string sample("vous vous");
+	//cout << sample << " " << modele.calcPerplex(sample, &arbre, sep) << endl;
 	//9297  1.60239
 	return 0;
 }

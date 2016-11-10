@@ -1,16 +1,5 @@
 #include "modele.h"
 
-string ShowVector(vector <unsigned int> vecteur)
-{
-	string temp;
-	for(unsigned int i = 0; i < vecteur.size(); i++)
-	{
-		temp += to_string(vecteur[i]);
-		temp += ' ';
-	}
-	return temp;
-}
-
 Modele::Modele(vector<unsigned int> p_list_token)
 {
 	list_token = p_list_token;
@@ -124,138 +113,11 @@ double Modele::calcProba(double num, double denum, string type)
 	return res;	
 }
 
-double Modele::calcPerplex(string phrase, Arbre* arbre, vector<unsigned int> sep)
-{
-	vector<unsigned int> res;
-	res = arbre->tokenizationStr(phrase, sep);
-	return calcPerplex(res);
-}
-
-double Modele::calcPerplex(vector<unsigned int> tokens)
-{
-	//Plog
-	double plog = 0;
-	vector<unsigned int> clef_buffer;	
-	vector<unsigned int > temp;
-
-	//probabilitée particulieres.
-	unsigned int i;
-	for( i = 0; i < (unsigned char) taille_gram && i < tokens.size(); i++)
-	{
-		clef_buffer.push_back(tokens[i]);
-		if( probas.find(clef_buffer) != probas.end() ) //si la proba != 0
-		{
-			plog += probas[clef_buffer];
-		}
-		else
-		{
-			temp = clef_buffer;
-			temp.pop_back();
-			if( probas.find(temp) != probas.end() ) //test de la proba du denum.
-				plog += calcProba(0, probas[temp], "laplace");
-			else
-				plog += calcProba(0, 0, "laplace");
-		}
-	}
-	
-	//N_gram "normal"
-	for( i = i; i < tokens.size(); i++)
-	{
-		//Ajoute du nouveau mot.
-		clef_buffer.push_back(tokens[i]);
-		//suppresion de l'ancien mot.
-		clef_buffer.assign( clef_buffer.begin() + 1, clef_buffer.end() );
-
-		if( probas.find(clef_buffer) != probas.end() ) //si la proba != 0
-		{
-			plog += probas[clef_buffer];
-		}
-		else
-		{
-			temp = clef_buffer;
-			temp.pop_back();
-			if( probas.find(temp) != probas.end() ) //test de la proba du denum.
-				plog += calcProba(0, probas[temp], "laplace");
-			else
-				plog += calcProba(0, 0, "laplace");
-		}
-	}
-	return pow(2, plog/tokens.size());
-}
-
 void Modele::ShowProbas(void)
 {
 	for (map<vector<unsigned int>, double>::iterator it = probas.begin(); it != probas.end(); it++)
 		cout << ShowVector(it->first) << " " << (double) it->second << '\n';
 }
-
-
-
-/*
-void pipi(list_token, n,)
-{
-	prof
-	static vector d'indice zi;
-	static vector taille n
-	zi = (0, 0, 0)
-	if( prof < n )
-	{
-		for( chaque iten de list)
-			zi[n] ++ si c'est pas plus grans list.size()
-			pipi()
-	}
-	else
-	{
-		for(unt sl i < list_token.size)
-			faire ce que tu veux.
-			res = list[zi[1]], list[zi[2]], list[zi[3]] ...
-		
-			
-	
-}
-
-vector<vector<unsigned int>> ensemblef;
-	vector<vector<unsigned int>> temp;
-	vector<unsigned int> ensembled;
-	for(map<vector<unsigned int>, unsigned int>::iterator it = n_grams[0].begin(); it != n_grams[0].end(); it++)
-	{
-		ensembled.push_back(it->first[0]);
-	}
-	for(map<vector<unsigned int>, unsigned int>::iterator it = n_grams[0].begin(); it != n_grams[0].end(); it++)
-	{
-		ensemblef.push_back(it->first);
-	}
-	int gg = 0;
-	for(int i = 1; i < taille; i++)
-	{
-		//Produit cartésien de mon ensemble finale avec l'ensemble de depart
-		temp = ensemblef;
-		ensemblef.clear();
-		for(unsigned int j = 0; j < temp.size(); j++)
-		{
-			//cout << j << endl;
-			for(unsigned int k = 0; k < ensembled.size(); k++)
-			{
-				temp[j].push_back(ensembled[k]);
-				//ensemblef.push_back(temp[j]);
-				temp[j].pop_back();
-				if((k==0) && (j%1000 == 0))
-					cout << ShowVector(ensemblef[gg]) << endl;
-				gg++;
-			}
-		}
-	}
-	for(unsigned int i = 0; i < ensemblef.size(); i++)
-	{
-		cout << ShowVector(ensemblef[i]) << endl;
-	}
-}
-*/
-
-
-
-
-
 
 
 
