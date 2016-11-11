@@ -128,7 +128,7 @@ int main(int argc, char ** argv)
 	
 	Translation translation = Translation();
 
-	translation.calcPerplexFromFile("exemple_pplex.txt", &arbre, sep, modele);
+	translation.calcPerplexFromFile(argv[3], &arbre, sep, modele);
 
 	translation.showPerplex();
 

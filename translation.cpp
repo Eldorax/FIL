@@ -88,7 +88,7 @@ double Translation::calcPerplex(string phrase, Arbre* arbre, vector<unsigned int
 void Translation::showPerplex(void)
 {
 	for (map<vector<unsigned int>, double>::iterator it = perplex.begin(); it != perplex.end(); it++)
-		cout << ShowVector(it->first) << " " << (double) it->second << '\n';
+		cout << "La phrase tokénisé : " << ShowVector(it->first) << "a pour perpléxité : " << (double) it->second << '\n';
 }
 
 
