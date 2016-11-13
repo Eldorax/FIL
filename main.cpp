@@ -122,7 +122,7 @@ int main(int argc, char ** argv)
 
 	modele.NGramConstructor(2); 
 
-	modele.ShowNGram("out");
+	modele.ShowNGram("n_gram.txt");
 
 	modele.probasConstructor(2);
 	

@@ -29,8 +29,5 @@ showVector.o: showVector.cpp showVector.h
 codetomot.exe: codetomot.c
 	g++ -Wall -o codetomot.exe codetomot.c
 
-test: translator.exe codetomot.exe
-	./translator.exe lexique.txt train.fr | ./codetomot.exe lexique.txt
-
 clean:
 	rm -f *.o *~ *.exe
