@@ -91,12 +91,151 @@ void Translation::showPerplex(void)
 		cout << "La phrase tokénisé : " << ShowVector(it->first) << "a pour perpléxité : " << (double) it->second << '\n';
 }
 
+void Translation::showTreillis(void)
+{
+	for(unsigned int i = 0; i < treillis.size(); i++)
+	{
+		cout << endl << "Etat " << i << endl;
+		for(unsigned int j = 0; j < treillis[i].size(); j++)
+		{
+			cout << treillis[i][j].token << ' ' << treillis[i][j].proba_emission << endl;
+		}
+	}
+}
+
+
+double Translation::calc2gramProba(vector<unsigned int> tokens, Modele& modele)
+{
+	//Plog
+	double plog = 0;
+	map<vector<unsigned int>, double> probas = modele.getProbas();
+	vector<unsigned int > temp;
+
+	//probabilitée particulieres.
+	if( probas.find(tokens) != probas.end() ) //si la proba != 0
+	{
+		plog = probas[tokens];
+	}
+	else
+	{
+		temp = tokens;
+		temp.pop_back();
+		if( probas.find(temp) != probas.end() ) //test de la proba du denum.
+			plog = modele.calcProba(0, probas[temp], "laplace");
+		else
+			plog = modele.calcProba(0, 0, "laplace");
+	}
+	return plog;
+}
 
 
 
+//Retourne la structure sommet_treillis acossier à une ligne de fichier.
+sommet_treillis getSommetTFromLine(string line)
+{
+	string token;
+	string proba_em;
+
+	unsigned int i;
+	for( i = 0; line[i] != ' ' and i < line.size(); i++)
+		token += line[i];
+
+	for( i = i+1; i < line.size(); i++)
+		proba_em += line[i];
+
+	sommet_treillis res = { ((unsigned int) atoll(token.c_str())), atof(proba_em.c_str()) };
+	return res;
+}
+
+void Translation::initTreillis(string file_name)
+{
+	ifstream file(file_name, ios::in);
+	string read_buffer;
+	vector<sommet_treillis> etat_temp;
+
+	if(file)
+	{
+		getline(file, read_buffer);
+		while(getline(file, read_buffer))
+		{
+			if( read_buffer[0] == '%' ) //Nouvel état
+			{
+				treillis.push_back(etat_temp);
+				etat_temp.clear();
+				
+			}
+			else
+				etat_temp.push_back(getSommetTFromLine(read_buffer));
+			
+		}
+		treillis.push_back(etat_temp);	
+		file.close();
+	}
+	else
+	{
+		cerr << "Impossible d'ouvrir le fichier " << file_name << "!\n";
+		exit(1);
+	}
+	
+}
 
 
 
+vector<unsigned int> Translation::calcTreillisEmmission(void)
+{
+	vector <unsigned int> res;
+	sommet_treillis min;
+	for(unsigned int i = 0; i < treillis.size(); i++)
+	{
+		min = treillis[i][0];
+		for(unsigned int j = 1; j < treillis[i].size(); j++)
+		{
+			if(treillis[i][j].proba_emission < min.proba_emission)
+				min = treillis[i][j];
+		}
+		res.push_back(min.token);
+	}
+	return res;
+}
+
+
+/*
+vector<unsigned int> Translation::calcTreillis(Modele modele)
+{
+	//vector< vector<unsigned int> > paths(treillis[0].size()); //Liste des chemins (il faut seletionner le plus cours à la fin.
+	vector <chemin> paths;
+	vector <unsigned int> clef;
+	map<vector<unsigned int>, double> proba = getProbas();
+	//unsigned int temp;
+	double min;
+	chemin temp;
+	//Initialisation des état initiaux.
+	for( unsigned int i = 0; i < treillis[0].size(); i++)
+	{
+		clef.push_back(treillis[0][i].token);
+		temp.path.push_back(treillis[0][i].token);
+		temp.proba = (treillis[0][i].proba_emission) + proba[clef];
+		paths.push_back()
+	}
+
+	//Pour chaque états.
+	for( unsigned  int i_etat = 1; i_etat < treillis.size(); i_etat ++)
+	{
+		//Calcule du meilleur.
+		for( unsigned int i_token = 0; i_token < teillis[i_etat].size(); i_token++)
+		{
+			//Parcour des ancètres.
+			min = 
+			for( unsigned int i_token_a = 0; i_token_a < teillis[i_etat-1].size(); i_token_a++)
+			{
+				if				
+			}
+			paths[i_token].push_back(min);
+		}
+	}
+	return res;
+}
+*/
 
 
 

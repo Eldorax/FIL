@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "arg.h"
 #include "translation.h"
-#include "showVector.h"
 
 using namespace std;
 
@@ -71,7 +70,7 @@ int main(int argc, char ** argv)
 			break;
 		}
 	}
-#include "showVector.h"
+
 	//Execution des options.
 	vector<unsigned int> token_list;
 	
@@ -129,18 +128,10 @@ int main(int argc, char ** argv)
 	
 	Translation translation = Translation();
 
-	//translation.calcPerplexFromFile(argv[3], &arbre, sep, modele);
+	translation.calcPerplexFromFile(argv[3], &arbre, sep, modele);
 
-	//translation.showPerplex();
+	translation.showPerplex();
 
-	translation.initTreillis("exemple_treillis.txt");
-
-	//translation.showTreillis();
-
-	cout << ShowVector(translation.calcTreillisEmmission()) << endl;
-	//translation.calcTreillis();
-
-///////////////////////////////////////////////////////////////////////////////////////
 	//modele.ShowProbas();
 	//unsigned int list_sep1[1] = {9297};
 	//vector <unsigned int> sep1(0);
