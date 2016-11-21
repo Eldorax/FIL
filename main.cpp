@@ -123,7 +123,7 @@ int main(int argc, char ** argv)
 
 	modele.NGramConstructor(2); 
 
-	modele.ShowNGram("n_gram.txt");
+	//modele.ShowNGram("n_gram.txt");
 
 	modele.probasConstructor(2);
 	
@@ -137,8 +137,8 @@ int main(int argc, char ** argv)
 
 	//translation.showTreillis();
 
-	cout << ShowVector(translation.calcTreillisEmmission()) << endl;
-	//translation.calcTreillis();
+	//cout << ShowVector(translation.calcTreillisEmmission()) << endl;
+	cout << ShowVector(translation.calcTreillis(modele)) << endl;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 	//modele.ShowProbas();

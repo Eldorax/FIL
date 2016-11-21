@@ -199,43 +199,81 @@ vector<unsigned int> Translation::calcTreillisEmmission(void)
 }
 
 
-/*
+
 vector<unsigned int> Translation::calcTreillis(Modele modele)
 {
 	//vector< vector<unsigned int> > paths(treillis[0].size()); //Liste des chemins (il faut seletionner le plus cours à la fin.
 	vector <chemin> paths;
+	vector <chemin> temp_paths;
 	vector <unsigned int> clef;
-	map<vector<unsigned int>, double> proba = getProbas();
 	//unsigned int temp;
 	double min;
 	chemin temp;
+	double probas_temp;
+
 	//Initialisation des état initiaux.
 	for( unsigned int i = 0; i < treillis[0].size(); i++)
 	{
 		clef.push_back(treillis[0][i].token);
 		temp.path.push_back(treillis[0][i].token);
-		temp.proba = (treillis[0][i].proba_emission) + proba[clef];
-		paths.push_back()
+		temp.proba = (treillis[0][i].proba_emission) + calc2gramProba(clef, modele);
+		paths.push_back(temp);
+		temp.path.clear();
+		clef.clear();
 	}
+	temp.path.clear();
 
 	//Pour chaque états.
 	for( unsigned  int i_etat = 1; i_etat < treillis.size(); i_etat ++)
 	{
 		//Calcule du meilleur.
-		for( unsigned int i_token = 0; i_token < teillis[i_etat].size(); i_token++)
+		for( unsigned int i_token = 0; i_token < treillis[i_etat].size(); i_token++)
 		{
-			//Parcour des ancètres.
-			min = 
-			for( unsigned int i_token_a = 0; i_token_a < teillis[i_etat-1].size(); i_token_a++)
+			//Parcour des ancètres et construction d'une liste de chemin temporaire.
+			temp_paths.push_back(temp);
+			clef.clear();
+			clef.push_back(treillis[i_etat-1][0].token);
+			clef.push_back(treillis[i_etat][i_token].token);
+			min = paths[0].proba + treillis[i_etat][i_token].proba_emission + calc2gramProba(clef, modele); 
+			temp_paths[i_token].path = paths[0].path;
+			temp_paths[i_token].path.push_back(treillis[i_etat][i_token].token);	
+
+			for( unsigned int i_token_a = 1; i_token_a < treillis[i_etat-1].size(); i_token_a++)
 			{
-				if				
+				clef.clear();
+				clef.push_back(treillis[i_etat-1][i_token_a].token);
+				clef.push_back(treillis[i_etat][i_token].token);
+				probas_temp = paths[i_token_a].proba + treillis[i_etat][i_token].proba_emission + calc2gramProba(clef, modele);
+
+				if (probas_temp < min)
+				{
+					min = probas_temp;
+					temp_paths[i_token].path = paths[i_token_a].path;
+					temp_paths[i_token].path.push_back(treillis[i_etat][i_token].token);				
+				}
 			}
-			paths[i_token].push_back(min);
+			temp_paths[i_token].proba = min;
+		}
+		paths.clear();
+		paths = temp_paths;
+		temp_paths.clear();
+		
+	}
+	
+	int save = 0;
+	double p = paths[0].proba;
+	for( unsigned int i = 1; i < paths.size(); i++)
+	{
+		if( paths[i].proba < p )
+		{
+			p = paths[i].proba;
+			save = i;
 		}
 	}
-	return res;
+
+	return paths[save].path;
 }
-*/
+
 
 
 

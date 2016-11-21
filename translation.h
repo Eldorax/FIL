@@ -44,7 +44,7 @@ class Translation
 
 		void initTreillis(string);  											  //Initialise un treillis à partir d'un fichier.
 		vector<unsigned int> calcTreillisEmmission(void);     					  //Calcule le plus cours chemin dans le treillis à partir des proba d'emmission only.
-		vector<unsigned int> calcTreillis(void);     					  		  //Calcule le plus cours chemin dans le treillis emission + transition.
+		vector<unsigned int> calcTreillis(Modele);     					  		  //Calcule le plus cours chemin dans le treillis emission + transition.
 
 };
 
