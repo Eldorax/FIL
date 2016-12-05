@@ -275,75 +275,7 @@ vector<unsigned int> Translation::calcTreillis(Modele modele)
 }
 
 
-void Translation::initTranslationTable(string file_name)
-{
-	translate_table.clear();
-	ifstream table_file(file_name, ios::in);
-	string read_buffer;
 
-	if(table_file)
-	{
-		unsigned int i;
-		string clef;
-		string trans;
-		string prob;
-		transElem temp;
-
-		while( getline(table_file, read_buffer) )
-		{
-			i = 0;
-			clef.clear();
-			trans.clear();
-			prob.clear();
-			
-			while(read_buffer[i] != ' ')
-			{
-				clef += read_buffer[i];
-				i++;
-			}
-
-			i++;
-			while(read_buffer[i] != ' ')
-			{
-				trans += read_buffer[i];
-				i++;
-			}
-
-			i++;
-			while(i < read_buffer.size())
-			{
-				prob += read_buffer[i];
-				i++;
-			}
-			
-			//Creation de la structure.
-			temp.trad = ((unsigned int) atoll(trans.c_str()));
-			temp.proba = atof(prob.c_str());
-
-			translate_table[((unsigned int) atoll(clef.c_str()))].push_back(temp);
-			
-		}
-	}
-	else
-	{
-		cout << "Erreur de l'ouverture de : " << file_name << endl;
-		exit(1);		
-	}
-}
-
-void Translation::createTreillis(string dest_file, vector<unsigned int> phrase)
-{
-	ofstream file(dest_file.c_str(), ios::out | ios::trunc);
-	
-	for( unsigned int i = 0; i < phrase.size(); i++)
-	{
-		file << "%col " << i << endl;
-		for( unsigned int j = 0; j < translate_table[ phrase[i] ].size(); j++)
-		{
-			file << translate_table[phrase[i]][j].trad << ' ' << translate_table[phrase[i]][j].proba << endl;
-		}
-	}
-}
 
 
 

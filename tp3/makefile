@@ -1,8 +1,8 @@
-translator.exe: elementArbre.o main.o arbre.o encodage.o modele.o arg.o translation.o showVector.o EM.o
-	g++ -Wall elementArbre.o arbre.o encodage.o modele.o main.o arg.o translation.o showVector.o EM.o -o translator.exe
+translator.exe: elementArbre.o main.o arbre.o encodage.o modele.o arg.o translation.o showVector.o
+	g++ -Wall elementArbre.o arbre.o encodage.o modele.o main.o arg.o translation.o showVector.o -o translator.exe
 	#./translator.exe lexique.txt train.fr
 
-main.o: main.cpp elementArbre.h arbre.h encodage.h modele.h arg.h translation.h EM.h
+main.o: main.cpp elementArbre.h arbre.h encodage.h modele.h arg.h translation.h
 	g++ -std=c++11 -Wall -c main.cpp -o main.o
 
 Arbre: arbre.cpp arbre.h elementArbre.h encodage.h
@@ -25,9 +25,6 @@ translation.o: translation.cpp translation.h arbre.h modele.h showVector.h
 
 showVector.o: showVector.cpp showVector.h
 	g++ -std=c++11 -Wall -c showVector.cpp -o showVector.o
-
-EM.o: EM.cpp EM.h
-	g++ -Wall -c EM.cpp -o EM.o
 
 codetomot.exe: codetomot.c
 	g++ -Wall -o codetomot.exe codetomot.c

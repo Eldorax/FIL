@@ -26,19 +26,11 @@ typedef struct
 	double proba;
 }chemin;
 
-typedef struct
-{
-	unsigned int trad;
-	double proba;
-}transElem;	
-
 class Translation
 {
 	private:
 		map < vector<unsigned int>, double > perplex;
-		vector< vector<sommet_treillis> > treillis;               //Treillis : treillis[0][0].token/proba_emission -> 1er etat, 1ere possibilité, le token/proba_emmission
-		map < unsigned int, vector<transElem> >	translate_table;  // contien une table de traduction
-
+		vector< vector<sommet_treillis> > treillis;     //Treillis : treillis[0][0].token/proba_emission -> 1er etat, 1ere possibilité, le token/proba_emmission
 	public:
 		Translation();
 
@@ -53,9 +45,6 @@ class Translation
 		void initTreillis(string);  											  //Initialise un treillis à partir d'un fichier.
 		vector<unsigned int> calcTreillisEmmission(void);     					  //Calcule le plus cours chemin dans le treillis à partir des proba d'emmission only.
 		vector<unsigned int> calcTreillis(Modele);     					  		  //Calcule le plus cours chemin dans le treillis emission + transition.
-
-		void initTranslationTable(string);							  			  //Initialise la table de traduction dans translate_table;
-		void createTreillis(string, vector<unsigned int>);				          //Créé un tréillis de la phrase parm 3 dans le fichier parm 2.
 
 };
 

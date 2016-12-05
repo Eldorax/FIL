@@ -10,7 +10,6 @@
 #include "arg.h"
 #include "translation.h"
 #include "showVector.h"
-#include "EM.h"
 
 using namespace std;
 
@@ -104,75 +103,42 @@ int main(int argc, char ** argv)
 	}
 	
 	*/
-
-	//Arbre arbre(argv[1]); //creation de l'arbre.
+	Arbre arbre(argv[1]); //creation de l'arbre.
 
 	//arbre.show();       //Pour afficher les mots construis dans l'arbre.
 		
-	//unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
-	//vector <unsigned int> sep(0);
-	//sep.assign(list_sep, list_sep + 12);	
+	unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
+	vector <unsigned int> sep(0);
+	sep.assign(list_sep, list_sep + 12);	
 		
 	//Calcule des token
-	//vector<unsigned int> token_list;
-	//token_list = arbre.tokenization(argv[2], sep);
+	vector<unsigned int> token_list;
+	token_list = arbre.tokenization(argv[2], sep);
 
 	//Creation du modele à partir de la liste de tokens
-	//Modele modele(token_list);
+	Modele modele(token_list);
 	
 	
 	//modele.ShowListToken();
 
-	//modele.NGramConstructor(2); 
+	modele.NGramConstructor(2); 
 
 	//modele.ShowNGram("n_gram.txt");
 
-	//modele.probasConstructor(2);
+	modele.probasConstructor(2);
 	
-	//Translation translation = Translation();
+	Translation translation = Translation();
 
 	//translation.calcPerplexFromFile(argv[3], &arbre, sep, modele);
 
 	//translation.showPerplex();
 
-	//translation.initTreillis("exemple_treillis.txt");
+	translation.initTreillis(argv[3]);
 
 	//translation.showTreillis();
 
-	//cout << ShowVector(translation.calcTreillisEmmission()) << endl;
+	cout << ShowVector(translation.calcTreillisEmmission()) << endl;
 	//cout << ShowVector(translation.calcTreillis(modele)) << endl;
-	
-	/*///////////////// Tokenization en /////////////////
-
-	Arbre arbre(argv[1]); //creation de l'arbre.
-
-	unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
-	vector <unsigned int> sep(0);
-	sep.assign(list_sep, list_sep + 12);
-
-	//Calcule des token
-	vector<unsigned int> token_list;
-	string n (argv[2]);
-	token_list = arbre.tokenizationStr(n, sep);
-	
-	Translation translation;
-	translation.initTranslationTable(argv[3]);
-	translation.createTreillis(argv[4], token_list);
-	*/
-	
-	///////////////// EM /////////////////
-
-	Arbre arbre_fr(argv[1]);
-	Arbre arbre_en(argv[2]);
-
-	unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
-	vector <unsigned int> sep(0);
-	sep.assign(list_sep, list_sep + 12);
-	
-	Em em;
-	em.initTokensFr(argv[3], arbre_fr, sep);
-	em.initTokensFr(argv[4], arbre_en, sep);
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 	//modele.ShowProbas();
