@@ -132,7 +132,8 @@ void Em::out(string file_name)
 	{
 		for (map<vector<unsigned int>, double>::iterator it = p_t.begin(); it != p_t.end(); it++)
 		{
-			file << (it->first)[0] << ' ' << (it->first)[1] << ' ' << (it->second) << endl;
+			if((it->second) > 0.2)
+				file << (it->first)[0] << ' ' << (it->first)[1] << ' ' << -1 * log10(it->second) << endl;
 		}
 		file.close();
 	}
@@ -141,40 +142,4 @@ void Em::out(string file_name)
 		cout << "Erreur lors de l'ouverture du fichier : " << file_name << endl;
 	}
 }
-
-
-
-
-/*
-Entree: ensemble de phrases (e, f)
-Sortie: probabilites de traduction p_t(e_i|f_j)
-initialiser p_t(e_i|f_j) uniformement (1/|E|)
-while p_t(e_i|f_j) ne converge pas {
-	// initialisation
-	nb(e_i,f_j) = 0 for all e_i, f_j
-	total(f_j) = 0 for all f_j
-	for all paires de phrases (e,f) {
-		// facteurs de normalisation
-		for all mots e_i in e {
-			s-total(e_i) = 0
-			for all mots f_j in f {
-				s-total(e_i) += p_t(e_i|f_j)
-			}
-		}
-		// estimer nombres d'occurrences (esperance)
-		for all mots e_i in e {
-			for all mots f_j in f {
-				nb(e_i,f_j) += p_t(e_i|f_j) / s-total(e_i)
-				total(f_j) += p_t(e_i|f_j) / s-total(e_i)
-			}
-		}
-	}
-	// estimation de probabilites (maximisation)
-	for tous les mots francais f_j {
-		for tous les mots anglais e_i {
-			p_t(e_i|f_j) = nb(e_i,f_j) / total(f_j)
-		}
-	}
-}
-*/
 

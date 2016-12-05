@@ -55,7 +55,7 @@ class Translation
 		vector<unsigned int> calcTreillis(Modele);     					  		  //Calcule le plus cours chemin dans le treillis emission + transition.
 
 		void initTranslationTable(string);							  			  //Initialise la table de traduction dans translate_table;
-		void createTreillis(string, vector<unsigned int>);				          //Créé un tréillis de la phrase parm 3 dans le fichier parm 2.
+		void createTreillis(string, vector<unsigned int>);				          //Créé un tréillis de la phrase param 2 dans le fichier param 1.
 
 };
 

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <math.h>
 
 #include "arbre.h"
 #include "showVector.h"

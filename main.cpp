@@ -103,7 +103,7 @@ int main(int argc, char ** argv)
 		}
 	}
 	
-	*/
+	
 
 	//Arbre arbre(argv[1]); //creation de l'arbre.
 
@@ -143,7 +143,7 @@ int main(int argc, char ** argv)
 	//cout << ShowVector(translation.calcTreillis(modele)) << endl;
 	
 	/*///////////////// Tokenization en /////////////////
-
+	/*
 	Arbre arbre(argv[1]); //creation de l'arbre.
 
 	unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
@@ -161,21 +161,48 @@ int main(int argc, char ** argv)
 	*/
 	
 	///////////////// EM /////////////////
-
-	Arbre arbre_fr(argv[1]);
-	Arbre arbre_en(argv[2]);
-
 	unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
 	vector <unsigned int> sep(0);
 	sep.assign(list_sep, list_sep + 12);
+	vector <unsigned int> token_list;
+	vector <unsigned int> token_phrase;
 
+	//Constructioin des arbres pour le calcul de la table de traduction.
+	Arbre arbre_fr(argv[1]);
+	Arbre arbre_en(argv[2]);
+
+	//Creation des listes de phrases tokénisé en francais et en anglais.
+	/*	
 	Em em;
 	em.initTokensFr(argv[3], arbre_fr, sep);
 	em.initTokensEn(argv[4], arbre_en, sep);
 	
+	//Création de la table de traduction.
 	em.calcEm(10);
-	em.out("res");
+	em.out("table.txt");
+	*/
+	//tokénisation du corpus d'apprentissage.
+	
+	token_list = arbre_fr.tokenization(argv[5], sep);
 
+	//Création du modéle à partir du corpus.
+	Modele modele(token_list);
+	modele.NGramConstructor(2); 
+	modele.probasConstructor(2);
+	
+	modele.ShowNGram("n_gram.txt");
+
+	//Creation du treillis par rapport au texte a traduire.
+	Translation translation = Translation();
+	translation.initTranslationTable("table.txt");
+	string phrase (argv[6]);
+	token_phrase = arbre_en.tokenizationStr(phrase, sep);
+	translation.createTreillis("treillis.txt", token_phrase);
+
+	translation.initTreillis("treillis.txt");
+
+	//cout << ShowVector(translation.calcTreillisEmmission()) << endl;
+	cout << ShowVector(translation.calcTreillis(modele)) << endl;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 	//modele.ShowProbas();
