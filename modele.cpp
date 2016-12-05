@@ -34,6 +34,8 @@ void Modele::NGramConstructor(char taille)
 		}
 		n_grams.push_back(i_gram);
 	}
+
+	
 }
 
 void Modele::ShowNGram(string type)

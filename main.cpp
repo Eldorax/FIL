@@ -168,10 +168,13 @@ int main(int argc, char ** argv)
 	unsigned int list_sep[12] = {44, 32, 10, 9, 91, 93, 46, 63, 33, 58, 59, 95};
 	vector <unsigned int> sep(0);
 	sep.assign(list_sep, list_sep + 12);
-	
+
 	Em em;
 	em.initTokensFr(argv[3], arbre_fr, sep);
-	em.initTokensFr(argv[4], arbre_en, sep);
+	em.initTokensEn(argv[4], arbre_en, sep);
+	
+	em.calcEm(10);
+	em.out("res");
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
